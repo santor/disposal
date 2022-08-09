@@ -4,5 +4,12 @@ import { defineNuxtConfig } from 'nuxt';
 export default defineNuxtConfig({
   typescript: {
     shim: false,
+    strict: true,
+  },
+  css: ['@/assets/css/styles.css'],
+  build: {
+    postcss: {
+      postcssOptions: require('./postcss.config.js'),
+    },
   },
 });
