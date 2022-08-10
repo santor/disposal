@@ -1,7 +1,7 @@
 <template>
   <div
     class="h-screen bg-right bg-cover flex flex-col"
-    style="background-image: url('/public/img/bg.svg')"
+    style="background-image: url('/img/bg.svg')"
   >
     <header class="w-full container mx-auto p-6">
       <a

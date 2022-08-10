@@ -22,6 +22,7 @@
   const props = defineProps({
     selectOptions: {type:Array<number>, required: true, default:[]}
   })
+
     const emit = defineEmits<{
       (event: 'zipChange', option: number): void;
     }>();
