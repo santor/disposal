@@ -16,7 +16,7 @@
 
     <!--Main-->
     <main
-      class="container pt-12 pb-24 px-6 mx-auto flex-grow flex flex-wrap flex-col md:flex-row items-center"
+      class="container pt-12 pb-24 px-6 mx-auto flex-grow flex items-center"
     >
       <slot />
     </main>
@@ -26,7 +26,7 @@
 
 <script setup>
   //TODO get it from .env or the package.json
-  const appName = 'Waste Collection';
+  const appName = 'Waste Disposal Schedule';
 </script>
 
 <style></style>

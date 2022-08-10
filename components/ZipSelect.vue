@@ -6,7 +6,7 @@
       @change="onSelectChange"
     >
       <option
-        v-for="(option, index) in zipOptions"
+        v-for="(option, index) in selectOptions"
         :key="index"
         :selected="selected === option"
         :disabled="option === 0"
@@ -19,22 +19,21 @@
 </template>
 
 <script setup lang="ts">
-  const emit = defineEmits<{
-    (event: 'zipChange', option: number): void;
-  }>();
-  const zipOptions = [
-    0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8042, 8044,
-    8045, 8046, 8047, 8048, 8049, 8050, 8051, 8052, 8053, 8055, 8057, 8064,
-  ];
-  const selected = ref(0);
+  const props = defineProps({
+    selectOptions: {type:Array<number>, required: true, default:[]}
+  })
+    const emit = defineEmits<{
+      (event: 'zipChange', option: number): void;
+    }>();
 
-  function onSelectChange(event: Event) {
-    const target = event.target as HTMLOptionElement;
-    if (target && 'value' in target) {
-      const selectedOption = parseInt(target.value);
-      selected.value = selectedOption;
-      emit('zipChange', selectedOption);
-      console.log(selectedOption);
+    const selected = ref(0);
+
+    function onSelectChange(event: Event) {
+      const target = event.target as HTMLOptionElement;
+      if (target && 'value' in target) {
+        const selectedOption = parseInt(target.value);
+        selected.value = selectedOption;
+        emit('zipChange', selectedOption);
+      }
     }
-  }
 </script>
