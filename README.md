@@ -1,42 +1,15 @@
-# Nuxt 3 Minimal Starter
+# Waste Disposal Schedule App
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+This app is made to familiarize myself with Nuxt 3 and Tailwind CSS. It uses the open source **[OpenERZ](https://openerz.metaodi.ch/documentation)** waste collection API of the cities Zürich, Thalwil, Basel and St. Gallen. The API is generously provided by **Stefan Oberbolz**.
 
-## Setup
+## Used Technologies and Resources
 
-Make sure to install the dependencies:
+- [Nuxt 3](https://v3.nuxtjs.org)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [OpenERZ project](https://github.com/metaodi/openerz) by Stefan Oberbolz
 
-```bash
-# yarn
-yarn install
+---
 
-# npm
-npm install
+## Demo
 
-# pnpm
-pnpm install --shamefully-hoist
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+A working demo can be found at https://silly-baklava-ad2c17.netlify.app/
