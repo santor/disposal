@@ -79,6 +79,7 @@
   const currentZip = ref(0);
   const disposalItems = ref<{ date: Date; type: WasteType }[]>([]);
   const loading = ref(false);
+  const fetchKey = ref(0);
 
   const zipOptions = [
     0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8041, 8044,
@@ -91,24 +92,30 @@
     }
   }
 
-  watch(currentZip, () => {
-    fetchSchedule();
+  watch(currentZip, (newZip) => {
+    console.log('watch zip');
+    console.log('new', newZip);
+    fetchSchedule(newZip);
   });
 
-  function fetchSchedule() {
+  function fetchSchedule(zipCode: number) {
+    console.log('fetching with', zipCode);
     loading.value = true;
 
     const dateString = useDateToQueryDate();
-    console.log('fetching with ziip', currentZip.value);
-    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${currentZip.value}&start=${dateString}&sort=date&offset=0&limit=10`;
+    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${zipCode}&start=${dateString}&sort=date&offset=0&limit=10`;
     // hack to overcome CORS problems
     // send request through corsproxy.io, to be able to use the OpenERZ API
-    const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`);
+    fetchKey.value = fetchKey.value++;
+    const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`, {
+      key: fetchKey.value.toString(),
+    });
 
     fetch
       .then((response) => {
         const result = response.data.value.result;
         if (result) {
+          console.log(result);
           disposalItems.value = result.map((item) => {
             return {
               date: new Date(item.date),
