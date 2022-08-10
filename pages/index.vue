@@ -7,24 +7,20 @@
       class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden"
     >
       <h1
-        class="my-4 text-3xl md:text-5xl text-purple-800 font-bold leading-tight text-center md:text-left slide-in-bottom-h1"
+        class="my-4 text-3xl md:text-5xl text-purple-800 font-bold leading-tight text-center md:text-left"
       >
         Waste Collection Zürich
       </h1>
       <p
-        class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle"
+        class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left"
       >
         Get the waste disposal schedule for your area.
       </p>
 
-      <p
-        class="text-blue-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in"
-      >
+      <p class="text-blue-400 font-bold pb-8 lg:pb-6 text-center md:text-left">
         Choose your ZIP code
       </p>
-      <div
-        class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in"
-      >
+      <div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0">
         <ZipSelect
           @zipChange="onZipSelectionChange"
           :selectOptions="zipOptions"
@@ -34,15 +30,52 @@
 
     <!--Right Col-->
     <div class="w-full xl:w-3/5 py-6 overflow-y-hidden">
-      <div v-if="disposalItems.length" class="w-full">not empty</div>
-      empty
+      <div v-if="disposalItems.length" class="w-full">
+        <div v-for="waste in disposalItems">
+          {{ waste.date }}
+          {{ waste.type }}
+        </div>
+      </div>
+      <div v-else-if="loading">Loading...</div>
+      <div v-else>empty</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+  type WasteType =
+    | 'waste'
+    | 'textile'
+    | 'special'
+    | 'paper'
+    | 'organic'
+    | 'metal'
+    | 'etram'
+    | 'cargotram'
+    | 'cardboard'
+    | 'bulky_goods'
+    | 'chipping_service'
+    | 'incombustibles';
+
+  interface WasteResponseItem {
+    date: string;
+    zip: number;
+    area: string;
+    region: string;
+    type: WasteType;
+  }
+
+  interface ApiResponse {
+    _metadata: {
+      total_Count: number;
+    };
+    result: WasteResponseItem[];
+  }
+
   const currentZip = ref(0);
-  const disposalItems = ref([]);
+  const disposalItems = ref<{ date: Date; type: WasteType }[]>([]);
+  const loading = ref(false);
+
   const zipOptions = [
     0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8042, 8044,
     8045, 8046, 8047, 8048, 8049, 8050, 8051, 8052, 8053, 8055, 8057, 8064,
@@ -55,12 +88,39 @@
   }
 
   watch(currentZip, () => {
-    // get todays date
+    fetchSchedule();
+  });
+
+  function fetchSchedule() {
+    loading.value = true;
+
     const dateString = useDateToQueryDate();
     const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${currentZip.value}&start=${dateString}&sort=date&offset=0&limit=0`;
     //CORS hack
-    const items = useFetch(`https://cors-anywhere.herokuapp.com/${query}`);
-  });
+    const fetch = useFetch<ApiResponse>(
+      `https://cors-anywhere.herokuapp.com/${query}`
+    );
+
+    fetch
+      .then((response) => {
+        const result = response.data.value.result;
+        console.log(result);
+        if (result) {
+          disposalItems.value = result.map((item) => {
+            return {
+              date: new Date(item.date),
+              type: item.type,
+            };
+          });
+        }
+      })
+      .catch((rejected) => {
+        console.log(rejected);
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
   onMounted(() => {
     // hack to overcome CORS problems
