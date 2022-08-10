@@ -23,7 +23,7 @@
     <div
       class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in"
     >
-      <ZipSelect />
+      <ZipSelect @zipChange="onZipSelectionChange" />
     </div>
   </div>
 
@@ -33,6 +33,13 @@
   </div>
 </template>
 
-<script setup>
-  const counter = ref(0);
+<script setup lang="ts">
+  const currentZip = ref(0);
+
+  function onZipSelectionChange(zip: number) {
+    if (zip && currentZip.value !== zip) {
+      console.log('change zip', zip);
+      currentZip.value = zip;
+    }
+  }
 </script>
