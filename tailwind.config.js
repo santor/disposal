@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  purge: [
-    './assets/**/*.{css}',
+  content: [
+    './assets/**/*.css',
     './components/*.{vue,js}',
     './components/**/*.{vue,js}',
     './layouts/*.vue',
