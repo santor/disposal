@@ -96,10 +96,9 @@
 
     const dateString = useDateToQueryDate();
     const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${currentZip.value}&start=${dateString}&sort=date&offset=0&limit=0`;
-    //CORS hack
-    const fetch = useFetch<ApiResponse>(
-      `https://cors-anywhere.herokuapp.com/${query}`
-    );
+    // hack to overcome CORS problems
+    // send request through corsproxy.io, to be able to use the OpenERZ API
+    const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`);
 
     fetch
       .then((response) => {
@@ -121,31 +120,4 @@
         loading.value = false;
       });
   }
-
-  onMounted(() => {
-    // hack to overcome CORS problems
-    // enable CORS anywhere, to be able to use the OpenERZ API
-    // taken from https://github.com/Rob--W/cors-anywhere/#client
-    (function () {
-      var cors_api_host = 'cors-anywhere.herokuapp.com';
-      var cors_api_url = 'https://' + cors_api_host + '/';
-      var slice = [].slice;
-      var origin = location.protocol + '//' + location.host;
-      var open = XMLHttpRequest.prototype.open;
-      XMLHttpRequest.prototype.open = function () {
-        var args = slice.call(arguments);
-        var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
-        if (
-          targetOrigin &&
-          targetOrigin[0].toLowerCase() !== origin &&
-          targetOrigin[1] !== cors_api_host
-        ) {
-          //@ts-ignore
-          args[1] = cors_api_url + args[1];
-        }
-        //@ts-ignore
-        return open.apply(this, args);
-      };
-    })();
-  });
 </script>
