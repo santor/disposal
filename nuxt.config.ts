@@ -6,7 +6,10 @@ export default defineNuxtConfig({
     shim: false,
     strict: true,
   },
-  css: ['@/assets/css/styles.css'],
+  css: [
+    '@/assets/css/styles.css',
+    '@fortawesome/fontawesome-svg-core/styles.css',
+  ],
   build: {
     postcss: {
       postcssOptions: require('./postcss.config.js'),

@@ -1,10 +1,10 @@
 <template>
   <!-- wrap the elements, because the transition needs a single child -->
-  <div class="w-full flex flex-wrap flex-col md:flex-row items-center">
+  <div class="w-full flex flex-wrap flex-col md:flex-row items-start">
     <!-- TODO move cols to the layout -->
     <!--Left Col-->
     <div
-      class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden"
+      class="flex flex-col w-full xl:w-2/5 justify-start lg:items-start overflow-y-hidden"
     >
       <h1
         class="my-4 text-3xl md:text-5xl text-purple-800 font-bold leading-tight text-center md:text-left"
@@ -31,19 +31,20 @@
     <!--Right Col-->
     <div class="w-full xl:w-3/5 py-6 overflow-y-hidden">
       <div v-if="disposalItems.length" class="w-full">
-        <div v-for="waste in disposalItems">
-          {{ waste.date }}
-          {{ waste.type }}
-        </div>
+        <DisposalInfoCard
+          v-for="waste in disposalItems"
+          :type="waste.type"
+          :date="waste.date"
+        />
       </div>
+      <!-- TODO spinner  when loading -->
       <div v-else-if="loading">Loading...</div>
-      <div v-else>empty</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  type WasteType =
+  export type WasteType =
     | 'waste'
     | 'textile'
     | 'special'
@@ -77,7 +78,7 @@
   const loading = ref(false);
 
   const zipOptions = [
-    0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8042, 8044,
+    0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8041, 8044,
     8045, 8046, 8047, 8048, 8049, 8050, 8051, 8052, 8053, 8055, 8057, 8064,
   ];
 
@@ -95,7 +96,8 @@
     loading.value = true;
 
     const dateString = useDateToQueryDate();
-    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${currentZip.value}&start=${dateString}&sort=date&offset=0&limit=0`;
+    console.log('fetching with ziip', currentZip.value);
+    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${currentZip.value}&start=${dateString}&sort=date&offset=0&limit=10`;
     // hack to overcome CORS problems
     // send request through corsproxy.io, to be able to use the OpenERZ API
     const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`);
@@ -103,7 +105,6 @@
     fetch
       .then((response) => {
         const result = response.data.value.result;
-        console.log(result);
         if (result) {
           disposalItems.value = result.map((item) => {
             return {

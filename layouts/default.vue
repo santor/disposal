@@ -14,10 +14,7 @@
       <div class="flex w-1/2 justify-end content-center"></div>
     </header>
 
-    <!--Main-->
-    <main
-      class="container pt-12 pb-24 px-6 mx-auto flex-grow flex items-center"
-    >
+    <main class="container pt-12 pb-24 px-6 mx-auto flex-grow flex items-start">
       <slot />
     </main>
     <AppFooter class="container px-6 mx-auto" :text="appName" />
