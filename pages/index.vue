@@ -33,7 +33,7 @@
       <div v-if="disposalItems.length" class="w-full">
         <DisposalInfoCard
           v-for="waste in disposalItems"
-          :type="waste.type"
+          :waste-type="waste.type"
           :date="waste.date"
         />
       </div>
@@ -43,21 +43,24 @@
   </div>
 </template>
 
-<script setup lang="ts">
-  export type WasteType =
-    | 'waste'
-    | 'textile'
-    | 'special'
-    | 'paper'
-    | 'organic'
-    | 'metal'
-    | 'etram'
-    | 'cargotram'
-    | 'cardboard'
-    | 'bulky_goods'
-    | 'chipping_service'
-    | 'incombustibles';
+<script lang="ts">
+  export enum WasteType {
+    Waste = 'waste',
+    Textile = 'textile',
+    Special = 'special',
+    Paper = 'paper',
+    Organic = 'organic',
+    Metal = 'metal',
+    Etram = 'etram',
+    CargoTram = 'cargotram',
+    Cardboard = 'cardboard',
+    BulkyGoods = 'bulky_goods',
+    ChippingService = 'chipping_service',
+    Incombustibles = 'incombustibles',
+  }
+</script>
 
+<script setup lang="ts">
   interface WasteResponseItem {
     date: string;
     zip: number;
