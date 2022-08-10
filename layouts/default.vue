@@ -1,19 +1,32 @@
 <template>
-  <div class="flex flex-col w-full h-screen overflow-hidden bg-green-50">
-    <header class="w-full h-16 bg-green-500">
-      <nav
-        class="flex items-center justify-center w-full h-full text-center text-black"
+  <div
+    class="h-screen bg-right bg-cover flex flex-col"
+    style="background-image: url('/public/img/bg.svg')"
+  >
+    <header class="w-full container mx-auto p-6">
+      <a
+        class="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
+        href="#"
       >
-        <h2 class="text-2xl font-bold text-white">Nuxt 3</h2>
-      </nav>
+        <AppLogo :title="appName" />
+      </a>
+
+      <div class="flex w-1/2 justify-end content-center"></div>
     </header>
-    <main class="flex-grow w-full h-full p-4 mx-auto max-w-7xl">
+
+    <!--Main-->
+    <main
+      class="container pt-12 pb-24 px-6 mx-auto flex-grow flex flex-wrap flex-col md:flex-row items-center"
+    >
       <slot />
     </main>
-    <footer class="flex items-center justify-center w-full h-16 text-black">
-      <p class="text-gray-700">
-        My Nuxt App &copy; {{ new Date().getFullYear() }}
-      </p>
-    </footer>
+    <AppFooter class="container px-6 mx-auto" :text="appName" />
   </div>
 </template>
+
+<script setup>
+  //TODO get it from .env or the package.json
+  const appName = 'Waste Collection';
+</script>
+
+<style></style>
