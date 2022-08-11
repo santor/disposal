@@ -8,8 +8,6 @@ This app is made to familiarize myself with Nuxt 3 and Tailwind CSS. It uses the
 - [Tailwind CSS](https://tailwindcss.com/)
 - [OpenERZ project](https://github.com/metaodi/openerz) by Stefan Oberbolz
 
----
-
 ## Demo
 
 A working demo can be found at https://silly-baklava-ad2c17.netlify.app/
