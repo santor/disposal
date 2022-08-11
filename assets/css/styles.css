@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  /* fix site jumping, when data is loaded */
+  overflow-y: scroll;
+}
