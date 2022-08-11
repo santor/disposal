@@ -73,7 +73,7 @@
   function fetchSchedule(zipCode: number) {
     loading.value = true;
     const dateString = useDateToQueryDate();
-    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${zipCode}&start=${dateString}&sort=date&offset=0&limit=10`;
+    const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${zipCode}&start=${dateString}&sort=date&offset=0&limit=0`;
     // hack to overcome CORS problems
     // send request through corsproxy.io, to be able to use the OpenERZ API
     const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`, {
