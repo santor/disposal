@@ -15,4 +15,10 @@ export default defineNuxtConfig({
       postcssOptions: require('./postcss.config.js'),
     },
   },
+  head: {
+    title: 'Waste Disposal Schedule Zürich',
+    htmlAttrs: {
+      lang: 'en',
+    },
+  },
 });
