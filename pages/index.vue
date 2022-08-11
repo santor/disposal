@@ -30,14 +30,14 @@
 
     <!--Right Col-->
     <div class="w-full xl:w-3/5 py-6 overflow-y-hidden">
-      <div v-if="disposalItems.length" class="w-full">
+      <div v-if="state.disposalItems.length && !loading" class="w-full">
         <DisposalInfoCard
-          v-for="waste in disposalItems"
+          v-for="waste in state.disposalItems"
           :waste-type="waste.type"
           :date="waste.date"
         />
       </div>
-      <!-- TODO spinner  when loading -->
+      <!-- TODO show spinner  when loading -->
       <div v-else-if="loading">Loading...</div>
     </div>
   </div>
@@ -77,9 +77,10 @@
   }
 
   const currentZip = ref(0);
-  const disposalItems = ref<{ date: Date; type: WasteType }[]>([]);
+  const state: { disposalItems: { date: Date; type: WasteType }[] } = reactive({
+    disposalItems: [],
+  });
   const loading = ref(false);
-  const fetchKey = ref(0);
 
   const zipOptions = [
     0, 8001, 8002, 8003, 8004, 8005, 8006, 8008, 8032, 8037, 8038, 8041, 8044,
@@ -93,8 +94,6 @@
   }
 
   watch(currentZip, (newZip) => {
-    console.log('watch zip');
-    console.log('new', newZip);
     fetchSchedule(newZip);
   });
 
@@ -104,19 +103,20 @@
 
     const dateString = useDateToQueryDate();
     const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${zipCode}&start=${dateString}&sort=date&offset=0&limit=10`;
+    console.log(query);
     // hack to overcome CORS problems
     // send request through corsproxy.io, to be able to use the OpenERZ API
-    fetchKey.value = fetchKey.value++;
     const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`, {
-      key: fetchKey.value.toString(),
+      initialCache: false,
     });
 
     fetch
       .then((response) => {
+        console.log('fetch reponse', response);
         const result = response.data.value.result;
         if (result) {
           console.log(result);
-          disposalItems.value = result.map((item) => {
+          state.disposalItems = result.map((item) => {
             return {
               date: new Date(item.date),
               type: item.type,
@@ -125,6 +125,7 @@
         }
       })
       .catch((rejected) => {
+        // TODO handle Errors
         console.log(rejected);
       })
       .finally(() => {
