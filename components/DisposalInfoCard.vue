@@ -1,12 +1,10 @@
 <template>
   <div class="bg-neutral-100 p-6 rounded-lg shadow-lg mb-6 flex flex-row">
-    <!-- <div class="icon-wrapper relative"> -->
     <div
       class="bg-indigo-400 rounded-full w-16 h-16 mr-5 flex justify-center items-center"
     >
       <font-awesome-icon class="text-2xl text-white w-8 h-8" :icon="icon" />
     </div>
-    <!-- </div> -->
     <div class="info-wrapper">
       <h2 class="text-2xl font-bold mt-1 text-gray-600">
         {{ title }}
@@ -32,31 +30,35 @@
   const icon = computed(() => {
     switch (wasteType) {
       case WasteType.BulkyGoods:
-        return 'fa-people-carry-box';
+        return prependFa('people-carry-box');
       case WasteType.Textile:
-        return 'fa-rug';
+        return prependFa('rug');
       case WasteType.Special:
-        return 'fa-sack-xmark';
+        return prependFa('sack-xmark');
       case WasteType.Paper:
-        return 'fa-newspaper';
+        return prependFa('newspaper');
       case WasteType.Organic:
-        return 'fa-leaf';
+        return prependFa('leaf');
       case WasteType.Metal:
-        return 'fa-cubes-stacked';
+        return prependFa('cubes-stacked');
       case WasteType.Etram:
-        return 'fa-train-tram';
+        return prependFa('train-tram');
       case WasteType.CargoTram:
-        return 'fa-train';
+        return prependFa('train');
       case WasteType.Cardboard:
-        return 'fa-box-open';
+        return prependFa('box-open');
       case WasteType.ChippingService:
-        return 'fa-tree';
+        return prependFa('tree');
       case WasteType.Incombustibles:
-        return 'fa-battery-quarter';
+        return prependFa('battery-quarter');
       default:
-        return 'fa-trash-alt';
+        return prependFa('trash-alt');
     }
   });
+
+  function prependFa(text: string) {
+    return `fa-${text}`;
+  }
 
   const type = computed(() => {
     switch (wasteType) {
