@@ -33,8 +33,7 @@
       <div v-if="state.disposalItems.length && !loading" class="w-full">
         <DisposalInfoCard
           v-for="waste in state.disposalItems"
-          :waste-type="waste.type"
-          :date="waste.date"
+          :disposalSchedule="waste"
         />
       </div>
       <!-- TODO show spinner  when loading -->
@@ -43,41 +42,15 @@
   </div>
 </template>
 
-<script lang="ts">
-  export enum WasteType {
-    Waste = 'waste',
-    Textile = 'textile',
-    Special = 'special',
-    Paper = 'paper',
-    Organic = 'organic',
-    Metal = 'metal',
-    Etram = 'etram',
-    CargoTram = 'cargotram',
-    Cardboard = 'cardboard',
-    BulkyGoods = 'bulky_goods',
-    ChippingService = 'chipping_service',
-    Incombustibles = 'incombustibles',
-  }
-</script>
-
 <script setup lang="ts">
-  interface WasteResponseItem {
-    date: string;
-    zip: number;
-    area: string;
-    region: string;
-    type: WasteType;
-  }
-
-  interface ApiResponse {
-    _metadata: {
-      total_Count: number;
-    };
-    result: WasteResponseItem[];
-  }
+  import {
+    DisposalSchedule,
+    ApiResponse,
+    DisposalScheduleEntity,
+  } from '@/domain/DisposalSchedule';
 
   const currentZip = ref(0);
-  const state: { disposalItems: { date: Date; type: WasteType }[] } = reactive({
+  const state: { disposalItems: DisposalSchedule[] } = reactive({
     disposalItems: [],
   });
   const loading = ref(false);
@@ -98,12 +71,9 @@
   });
 
   function fetchSchedule(zipCode: number) {
-    console.log('fetching with', zipCode);
     loading.value = true;
-
     const dateString = useDateToQueryDate();
     const query = `https://openerz.metaodi.ch/api/calendar.json?zip=${zipCode}&start=${dateString}&sort=date&offset=0&limit=10`;
-    console.log(query);
     // hack to overcome CORS problems
     // send request through corsproxy.io, to be able to use the OpenERZ API
     const fetch = useFetch<ApiResponse>(`https://corsproxy.io/?${query}`, {
@@ -112,15 +82,10 @@
 
     fetch
       .then((response) => {
-        console.log('fetch reponse', response);
         const result = response.data.value.result;
         if (result) {
-          console.log(result);
           state.disposalItems = result.map((item) => {
-            return {
-              date: new Date(item.date),
-              type: item.type,
-            };
+            return DisposalScheduleEntity.fromResponse(item);
           });
         }
       })

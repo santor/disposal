@@ -1,9 +1,8 @@
 <template>
   <div class="bg-neutral-100 p-6 rounded-lg shadow-lg mb-6 flex flex-row">
-    <font-awesome-icon
-      class="bg-indigo-400 p-6 rounded-full mr-5 text-4xl text-white"
-      :icon="icon"
-    />
+    <div class="bg-indigo-400 aspect-square p-6 rounded-full mr-5">
+      <font-awesome-icon class="text-3xl text-white" :icon="icon" />
+    </div>
     <div class="info-wrapper">
       <h2 class="text-2xl font-bold mb-2 text-gray-600">{{ title }}</h2>
       <p class="text-gray-700">{{ name }}</p>
@@ -13,21 +12,19 @@
 
 <script setup lang="ts">
   import { PropType } from 'vue';
-  import { WasteType } from '@/pages/index.vue';
+  import { DisposalSchedule, WasteType } from '@/domain/DisposalSchedule';
 
   const props = defineProps({
-    wasteType: {
-      type: String as PropType<WasteType>,
-      required: true,
-    },
-    date: {
-      type: Date,
+    disposalSchedule: {
+      type: Object as PropType<DisposalSchedule>,
       required: true,
     },
   });
 
+  const wasteType = props.disposalSchedule.type;
+
   const icon = computed(() => {
-    switch (props.wasteType) {
+    switch (wasteType) {
       case WasteType.BulkyGoods:
         return 'fa-people-carry-box';
       case WasteType.Textile:
@@ -56,7 +53,7 @@
   });
 
   const name = computed(() => {
-    switch (props.wasteType) {
+    switch (wasteType) {
       case WasteType.BulkyGoods:
         return 'Bulky goods';
       case WasteType.Textile:
@@ -85,5 +82,5 @@
   });
 
   //just because I like this date format more
-  const title = props.date.toLocaleDateString('de-DE');
+  const title = props.disposalSchedule.date.toLocaleDateString('de-DE');
 </script>
